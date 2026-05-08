@@ -1,0 +1,67 @@
+# ==========================================
+# Task 2: Digital Signature Using RSA
+# ==========================================
+
+import hashlib
+
+
+# Function to calculate GCD
+
+def gcd(a, b):
+    while b != 0:
+        a, b = b, a % b
+    return a
+
+
+# Function to calculate modular inverse
+
+def mod_inverse(e, phi):
+    for d in range(1, phi):
+        if (d * e) % phi == 1:
+            return d
+
+
+# RSA Key Generation
+p = 17
+q = 11
+
+n = p * q
+phi = (p - 1) * (q - 1)
+
+e = 7
+
+if gcd(e, phi) != 1:
+    print("Invalid e")
+
+
+d = mod_inverse(e, phi)
+
+
+# Public and Private Keys
+public_key = (e, n)
+private_key = (d, n)
+
+print("Public Key:", public_key)
+print("Private Key:", private_key)
+
+
+# Original Message
+message = "Information Security Lab"
+
+
+# Step 1: Create SHA256 Hash
+hash_value = hashlib.sha256(message.encode()).hexdigest()
+
+print("Original Hash:", hash_value)
+
+
+# Convert hash into integer
+hash_int = int(hash_value, 16)
+
+
+# Step 2: Create Digital Signature
+# Signature = hash^d mod n
+
+signature = pow(hash_int, d, n)
+
+print("Digital Signature:", signature)
